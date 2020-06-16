@@ -28,13 +28,13 @@ public class Main {
 
             switch (opcao) {
                 case 1:
-                    String nome, responsavel, cidade, estado, cidades, estados;
+                    String nomeRede, responsavel, cidade, estado, cidades, estados;
 
                     RedeHospitalar redeHospitalar = new RedeHospitalar();
 
                     System.out.println("Digite o nome da rede: ");
-                    nome = sc.nextLine();
-                    redeHospitalar.setNome(nome);
+                    nomeRede = sc.nextLine();
+                    redeHospitalar.setNome(nomeRede);
 
                     System.out.println("Digite o nome do responsável: ");
                     responsavel = sc.nextLine();
@@ -77,11 +77,20 @@ public class Main {
                         estados = sc.nextLine();
                         redeHospitalar.adicionaCidade(estados);
                     }
-                    break;
-/*
-                case 2:
+
                     break;
 
+                case 2:
+                    String nomeHospital, endereco;
+                    Hospital hospital = new Hospital();
+                    System.out.println("Digite o nome do Hospital");
+                    nomeHospital = sc.nextLine();
+                    hospital.setNome(nomeHospital);
+                    System.out.println("Digite o endereço do hospital");
+                    endereco = sc.nextLine();
+                    hospital.setEndereco(endereco);
+                    break;
+/*
                 case 3:
                     break;
 
