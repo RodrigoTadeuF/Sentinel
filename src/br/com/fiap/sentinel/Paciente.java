@@ -1,34 +1,37 @@
 package br.com.fiap.sentinel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Paciente {
 
-    private Long id;
+    private static Long id = 0l;
     private String nome;
     private String sobrenome;
-    private Integer temperatura;
-    private Boolean tosse;
-    private Boolean dificuldadeRespiratoria;
+    private Double temperatura;
+    
+    private List<Boolean>sintomasPaciente = new ArrayList<Boolean>(); 
+    
     private String observacoes;
 
     public Paciente() { }
 
-    public Paciente(Long id, String nome, String sobrenome, Integer temperatura, Boolean tosse, Boolean dificuldadeRespiratoria, String observacoes) {
-        this.id = id;
+    public Paciente(String nome, String sobrenome, Double temperatura,List<Boolean>sintomasPaciente , String observacoes) {
+    	generateId();
         this.nome = nome;
         this.sobrenome = sobrenome;
         this.temperatura = temperatura;
-        this.tosse = tosse;
-        this.dificuldadeRespiratoria = dificuldadeRespiratoria;
+        this.sintomasPaciente = sintomasPaciente;
         this.observacoes = observacoes;
     }
 
+    public static long generateId() {
+    	Paciente.id = Paciente.id +1 ;
+    	 return Paciente.id;
+    }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getNome() {
@@ -47,31 +50,19 @@ public class Paciente {
         this.sobrenome = sobrenome;
     }
 
-    public Integer getTemperatura() {
+    public Double getTemperatura() {
         return temperatura;
     }
 
-    public void setTemperatura(Integer temperatura) {
+    public void setTemperatura(Double temperatura) {
         this.temperatura = temperatura;
     }
-
-    public Boolean getTosse() {
-        return tosse;
-    }
-
-    public void setTosse(Boolean tosse) {
-        this.tosse = tosse;
-    }
-
-    public Boolean getDificuldadeRespiratoria() {
-        return dificuldadeRespiratoria;
-    }
-
-    public void setDificuldadeRespiratoria(Boolean dificuldadeRespiratoria) {
-        this.dificuldadeRespiratoria = dificuldadeRespiratoria;
-    }
-
-    public String getObservacoes() {
+  
+    public List<Boolean> getSintomasPaciente() {
+		return sintomasPaciente;
+	}
+    
+	public String getObservacoes() {
         return observacoes;
     }
 

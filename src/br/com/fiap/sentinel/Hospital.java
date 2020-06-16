@@ -61,6 +61,10 @@ public class Hospital {
     public void setPacientes(List<Paciente> pacientes) {
         this.pacientes = pacientes;
     }
+    
+    public List<Hospital>getHospitalByPlanoSaude(String nomePlanoSaude){
+    	return null;
+    }
 
 
 }
