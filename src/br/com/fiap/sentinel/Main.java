@@ -16,9 +16,12 @@ public class Main {
 
 		Funcionario funcionario = null;
 		Paciente paciente = null;
-
+		Hospital hospital = null;
+		RedeHospitalar redeHospitalar = null;
+		
 		List<Boolean> sintomasPaciente = new ArrayList<Boolean>();
 		List<Funcionario> funcionariosHospital = new ArrayList<Funcionario>();
+		List<Paciente>filaAtendimentoPaciente = new ArrayList<Paciente>();
 		List<Paciente>pacientesParaInternar = new ArrayList<Paciente>();
 
 		while (opcao != 0) {
@@ -29,7 +32,7 @@ public class Main {
 			System.out.println("Digite 4 para cadastrar um paciente");
 			System.out.println("Digite 5 para ver os hospitais que o plano atende");
 			System.out.println("Digite 6 para atender um paciente");
-			System.out.println("Digite 7 para ver a quantidade de leitos de um hospital");
+			System.out.println("Digite 7 para ver a quantidade de leitos disponíveis");
 			System.out.println("Digite 8 para liberar um paciente");
 			System.out.println("Digite 0 para sair");
 			opcao = sc.nextInt();
@@ -59,31 +62,32 @@ public class Main {
 			case 2:
 				String nomeHospital, endereco;
 
-				Hospital hospital = new Hospital();
-
-				System.out.println("Digite o nome do Hospital");
+				System.out.println("Digite o nome do hospital: ");
 				nomeHospital = sc.nextLine();
 
-				hospital.setNome(nomeHospital);
-
-				System.out.println("Digite o endereço do hospital");
+				System.out.println("Digite o endereço do hospital: ");
 				endereco = sc.nextLine();
-
-				hospital.setEndereco(endereco);
+				
+				hospital = new Hospital(nomeHospital, endereco);
+				
+//				Teste para validar os dados do hospital
+//				System.out.println(hospital.getNome());
+//				System.out.println(hospital.getEndereco());
+				
 				break;
 
 			case 3:
 				String nomeRede, responsavel, cidade, estado, cidades, estados;
 
-				RedeHospitalar redeHospitalar = new RedeHospitalar();
+				redeHospitalar = new RedeHospitalar();
 
 				System.out.println("Digite o nome da rede: ");
 				nomeRede = sc.nextLine();
-				redeHospitalar.setNome(nomeRede);
 
 				System.out.println("Digite o nome do responsável: ");
 				responsavel = sc.nextLine();
-				redeHospitalar.setResponsavel(responsavel);
+				
+				redeHospitalar = new RedeHospitalar(nomeRede, responsavel);
 
 				System.out.println("A rede atende mais de uma cidade?");
 				cidade = sc.nextLine();
@@ -113,15 +117,21 @@ public class Main {
 						System.out.println("Digite o nome da estado: ");
 						estados = sc.nextLine();
 						redeHospitalar.adicionaEstado(estados);
-						System.out.println("A rede atende mais alguma estado?");
+						System.out.println("A rede atende mais algum estado?");
 						estado = sc.nextLine();
 						estado = estado.toUpperCase();
 					}
 				} else {
-					System.out.println("Digite o nome da estado: ");
+					System.out.println("Digite o nome do estado: ");
 					estados = sc.nextLine();
 					redeHospitalar.adicionaCidade(estados);
 				}
+				
+//				Testes para checar o cadastro da rede
+//				System.out.println(redeHospitalar.getNome());
+//				System.out.println(redeHospitalar.getResponsavel());
+//				System.out.println(redeHospitalar.getCidadesCobertura());
+//				System.out.println(redeHospitalar.getEstadosCobertura());
 
 				break;
 
@@ -177,14 +187,28 @@ public class Main {
 						.filter(x -> x == true)
 						.collect(Collectors.toList());
 
-				if (sintomas.size() >= 2) {
-					
-					paciente = new Paciente(nomePaciente, sobrenomePaciente, temperaturaPaciente,
+				paciente = new Paciente(nomePaciente, sobrenomePaciente, temperaturaPaciente,
 							sintomas, observacao);
-					
-					System.out.println("Será necessário internar o paciente: " + paciente.getNome());
-					
-					pacientesParaInternar.add(paciente);
+				
+				filaAtendimentoPaciente.add(paciente);
+				
+//				Teste do preenchimento da lista
+//				for (Paciente p : filaAtendimentoPaciente) {
+//					System.out.println(p.getId());
+//					System.out.println(p.getNome());
+//					System.out.println(p.getSobrenome());
+//					System.out.println(p.getSintomasPaciente());
+//					System.out.println(p.getObservacoes());
+//				}
+				
+//				if (sintomas.size() >= 2) {
+//					
+//					paciente = new Paciente(nomePaciente, sobrenomePaciente, temperaturaPaciente,
+//							sintomas, observacao);
+//					
+//					System.out.println("Será necessário internar o paciente: " + paciente.getNome());
+//					
+//					pacientesParaInternar.add(paciente);
 					
 					
 					// Teste para ver se os dados estavam sendo preenchidos corretamente no objeto paciente
@@ -197,12 +221,12 @@ public class Main {
 //					}
 					
 					
-				} else {
-					paciente = new Paciente(nomePaciente, sobrenomePaciente, temperaturaPaciente,
-							sintomasPaciente, observacao);
-					
-					System.out.println("O tratamento do paciente: " + paciente.getNome() + " poderá ser feito em casa.");
-				}
+//				} else {
+//					paciente = new Paciente(nomePaciente, sobrenomePaciente, temperaturaPaciente,
+//							sintomasPaciente, observacao);
+//					
+//					System.out.println("O tratamento do paciente: " + paciente.getNome() + " poderá ser feito em casa.");
+//				}
 
 				break;
 
@@ -210,9 +234,43 @@ public class Main {
 				break;
 
 			case 6:
+				System.out.println();
+				System.out.println("Bem vindo a central de atendimento");
+				System.out.println();
+				
+				String respostaInternacao;
+				
+				if(!filaAtendimentoPaciente.isEmpty()) {
+					Paciente atendimento = null;
+					atendimento = filaAtendimentoPaciente.get(0);
+					System.out.println(atendimento.getNome());
+					System.out.println(atendimento.getSobrenome());
+					System.out.println(atendimento.getSintomasPaciente());
+					System.out.println(atendimento.getObservacoes());
+					
+					System.out.println("Dado o cenário do paciente deseja interná-lo?");
+					respostaInternacao = sc.nextLine();
+					respostaInternacao = respostaInternacao.toUpperCase();
+					
+					if(respostaInternacao.equals("SIM")) {
+						hospital.adicionaInternacao(atendimento);
+					}
+					
+//					Paciente internado = null;
+//					internado = hospital.getLeitos().get(0);
+//					System.out.println(internado.getNome());
+					filaAtendimentoPaciente.remove(0);
+					
+				} else {
+					System.out.println("Não há pacientes para serem atendidos");
+				}
+				
+				
 				break;
 
 			case 7:
+				System.out.printf("O hospital possui %s leitos disponíveis", hospital.leitosDisponiveis());
+				System.out.println();
 				break;
 
 			case 8:

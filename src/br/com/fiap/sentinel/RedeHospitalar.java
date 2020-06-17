@@ -13,6 +13,11 @@ public class RedeHospitalar {
     private List<Hospital> hospitais = new ArrayList<Hospital>();
 
     public RedeHospitalar() {  }
+    
+    public RedeHospitalar(String nome, String responsavel) { 
+    	this.nome = nome;
+    	this.responsavel = responsavel;
+    }
 
     public RedeHospitalar(String nome, String responsavel, List<String> cidadesCobertura, List<String> estadosCobertura, List<Hospital> hospitais) {
         this.nome = nome;
