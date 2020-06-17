@@ -1,10 +1,13 @@
 package br.com.fiap.sentinel;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PlanoSaude {
 
+	private static long id;
     private String nome;
     List<Paciente> pacientePlano = new ArrayList<Paciente>();
     List<RedeHospitalar> hospitaisPlano = new ArrayList<RedeHospitalar>();
@@ -12,11 +15,27 @@ public class PlanoSaude {
     public PlanoSaude() {  }
 
     public PlanoSaude(String nome, List<Paciente> pacientePlano, List<RedeHospitalar> hospitaisPlano) {
-        this.nome = nome;
+    	generateId();
+    	this.nome = nome;
         this.pacientePlano = pacientePlano;
         this.hospitaisPlano = hospitaisPlano;
     }
+    
+    
+    public PlanoSaude(String plano) {
+    	generateId(); 
+    	this.nome = plano; 
+    }
 
+    public static long generateId() {
+    	PlanoSaude.id = PlanoSaude.id + 1 ;
+    	return PlanoSaude.id;
+    }
+    
+    public long getId() {
+    	return id;
+    }
+    
     public String getNome() {
         return nome;
     }
@@ -40,4 +59,8 @@ public class PlanoSaude {
     public void setHospitaisPlano(List<RedeHospitalar> hospitaisPlano) {
         this.hospitaisPlano = hospitaisPlano;
     }
+    
+   
+    
+    
 }

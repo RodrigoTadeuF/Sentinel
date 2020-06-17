@@ -11,6 +11,7 @@ public class Main {
 
 		Scanner sc = new Scanner(System.in);
 		int opcao = -1;
+		 
 
 		System.out.println("BEM VINDO AO SENTINELS:");
 
@@ -23,6 +24,10 @@ public class Main {
 		List<Funcionario> funcionariosHospital = new ArrayList<Funcionario>();
 		List<Paciente>filaAtendimentoPaciente = new ArrayList<Paciente>();
 		List<Paciente>pacientesParaInternar = new ArrayList<Paciente>();
+		List<RedeHospitalar>redesHospitalares = new ArrayList<RedeHospitalar>();
+		List<Hospital>hospitais = new ArrayList<Hospital>();
+		List<PlanoSaude>planoSaudeL = null;
+		
 
 		while (opcao != 0) {
 			System.out.println("Selecione uma das opções abaixo para utilizar o sistema:");
@@ -46,7 +51,7 @@ public class Main {
 				System.out.print("Digite o sobrenome do funcionário: ");
 				String sobrenomeFuncionario = sc.nextLine();
 
-				System.out.println("Digite o email do funcionário: ");
+				System.out.print("Digite o email do funcionário: ");
 				String emailFuncionario = sc.nextLine();
 
 				System.out.print("Digite o cargo do funcionário: ");
@@ -70,6 +75,8 @@ public class Main {
 				
 				hospital = new Hospital(nomeHospital, endereco);
 				
+				hospitais.add(hospital);
+				
 //				Teste para validar os dados do hospital
 //				System.out.println(hospital.getNome());
 //				System.out.println(hospital.getEndereco());
@@ -81,24 +88,24 @@ public class Main {
 
 				redeHospitalar = new RedeHospitalar();
 
-				System.out.println("Digite o nome da rede: ");
+				System.out.print("Digite o nome da rede: ");
 				nomeRede = sc.nextLine();
 
-				System.out.println("Digite o nome do responsável: ");
+				System.out.print("Digite o nome do responsável: ");
 				responsavel = sc.nextLine();
 				
 				redeHospitalar = new RedeHospitalar(nomeRede, responsavel);
 
-				System.out.println("A rede atende mais de uma cidade?");
+				System.out.print("A rede atende mais de uma cidade?");
 				cidade = sc.nextLine();
 				cidade = cidade.toUpperCase();
 
 				if (cidade.equals("SIM")) {
 					while (cidade.equals("SIM")) {
-						System.out.println("Digite o nome da cidade: ");
+						System.out.print("Digite o nome da cidade: ");
 						cidades = sc.nextLine();
 						redeHospitalar.adicionaCidade(cidades);
-						System.out.println("A rede atende mais alguma cidade?");
+						System.out.print("A rede atende mais alguma cidade?");
 						cidade = sc.nextLine();
 						cidade = cidade.toUpperCase();
 					}
@@ -114,17 +121,45 @@ public class Main {
 
 				if (estado.equals("SIM")) {
 					while (estado.equals("SIM")) {
-						System.out.println("Digite o nome da estado: ");
+						System.out.print("Digite o nome da estado: ");
 						estados = sc.nextLine();
 						redeHospitalar.adicionaEstado(estados);
-						System.out.println("A rede atende mais algum estado?");
+						System.out.print("A rede atende mais algum estado?");
 						estado = sc.nextLine();
 						estado = estado.toUpperCase();
 					}
 				} else {
-					System.out.println("Digite o nome do estado: ");
+					System.out.print("Digite o nome do estado: ");
 					estados = sc.nextLine();
 					redeHospitalar.adicionaCidade(estados);
+				}
+				
+				System.out.print("Informe o número dos hospitais que deseja vincular a essa rede: ");
+				
+				long opcaoHospital = 0;
+				
+				if(hospitais.size()==0) {
+					System.out.println("Não há hospitais cadastrados no banco para vincular a essa rede");
+				}
+				else {
+					for (Hospital hosp : hospitais) {
+						System.out.println(hosp.getId() + " - " + hosp.getNome());
+					}
+					opcaoHospital = sc.nextLong();
+					
+				    Hospital hospitalFiltrado = hospital.getById(hospitais, opcaoHospital);
+				    
+				    List<Hospital>hospitalL = new ArrayList<Hospital>();
+				    
+				    if(!(hospitalFiltrado==null)) {
+				    	hospitalL.add(hospitalFiltrado);
+				    	redeHospitalar.setHospitais(hospitalL);
+				    	
+				    	System.out.println("Hospital " + hospitalFiltrado.getNome() + " adicionado a rede hospitalar: " + redeHospitalar.getNome());
+				    	
+				    }else {
+				    	System.out.println("Não foram encontrados hospitais cadastrados em nossa base de dados. ");
+				    }	
 				}
 				
 //				Testes para checar o cadastro da rede
@@ -277,6 +312,8 @@ public class Main {
 				break;
 
 			case 0:
+				System.out.println("Obrigado por utilizar nosso sistema!");
+				System.exit(0);
 				break;
 
 			default:
