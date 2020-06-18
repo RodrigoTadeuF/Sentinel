@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Paciente {
 
-    private static Long id = 0l;
+    private Long id = GenerateId.generateId();
     private String nome;
     private String sobrenome;
     private Double temperatura;
@@ -17,7 +17,6 @@ public class Paciente {
     public Paciente() { }
 
     public Paciente(String nome, String sobrenome, Double temperatura,List<Boolean>sintomasPaciente , String observacoes) {
-    	generateId();
         this.nome = nome;
         this.sobrenome = sobrenome;
         this.temperatura = temperatura;
@@ -25,14 +24,8 @@ public class Paciente {
         this.observacoes = observacoes;
     }
 
-    public static long generateId() {
-    	Paciente.id = Paciente.id +1 ;
-    	 return Paciente.id;
-    }
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
 
     public String getNome() {
         return nome;

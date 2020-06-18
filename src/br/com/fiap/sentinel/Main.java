@@ -1,8 +1,6 @@
 package br.com.fiap.sentinel;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -74,17 +72,19 @@ public class Main {
 				endereco = sc.nextLine();
 				
 				hospital = new Hospital(nomeHospital, endereco);
+
+				System.out.println(hospital.getId());
 				
 				hospitais.add(hospital);
-				
-//				Teste para validar os dados do hospital
-//				System.out.println(hospital.getNome());
-//				System.out.println(hospital.getEndereco());
-				
+
 				break;
 
 			case 3:
 				String nomeRede, responsavel, cidade, estado, cidades, estados;
+				String respostaRede = "SIM";
+				Integer idHospital;
+				Hospital hospitalDaRede = null;
+				List<Hospital> hospitaisDaRede;
 
 				redeHospitalar = new RedeHospitalar();
 
@@ -133,40 +133,31 @@ public class Main {
 					estados = sc.nextLine();
 					redeHospitalar.adicionaCidade(estados);
 				}
-				
-				System.out.print("Informe o número dos hospitais que deseja vincular a essa rede: ");
-				
-				long opcaoHospital = 0;
-				
-				if(hospitais.size()==0) {
-					System.out.println("Não há hospitais cadastrados no banco para vincular a essa rede");
-				}
-				else {
+
+				while(respostaRede.equals("SIM")) {
 					for (Hospital hosp : hospitais) {
 						System.out.println(hosp.getId() + " - " + hosp.getNome());
 					}
-					opcaoHospital = sc.nextLong();
-					
-				    Hospital hospitalFiltrado = hospital.getById(hospitais, opcaoHospital);
-				    
-				    List<Hospital>hospitalL = new ArrayList<Hospital>();
-				    
-				    if(!(hospitalFiltrado==null)) {
-				    	hospitalL.add(hospitalFiltrado);
-				    	redeHospitalar.setHospitais(hospitalL);
-				    	
-				    	System.out.println("Hospital " + hospitalFiltrado.getNome() + " adicionado a rede hospitalar: " + redeHospitalar.getNome());
-				    	
-				    }else {
-				    	System.out.println("Não foram encontrados hospitais cadastrados em nossa base de dados. ");
-				    }	
+
+					String nomeDoHospital;
+
+					System.out.print("Informe o nome do hospital que deseja vincular a essa rede: ");
+					nomeDoHospital = sc.nextLine();
+
+					hospitaisDaRede =  hospitais
+							.stream()
+							.filter(x -> x.getNome().equals(nomeDoHospital))
+							.collect(Collectors.toList());
+
+					Hospital hospRede = hospitaisDaRede.get(0);
+
+					redeHospitalar.adicionarHospital(hospRede);
+					hospitais.remove(hospRede);
+
+					System.out.print("Deseja cadastrar outro Hospital na rede? ");
+					respostaRede = sc.nextLine();
+					respostaRede = respostaRede.toUpperCase();
 				}
-				
-//				Testes para checar o cadastro da rede
-//				System.out.println(redeHospitalar.getNome());
-//				System.out.println(redeHospitalar.getResponsavel());
-//				System.out.println(redeHospitalar.getCidadesCobertura());
-//				System.out.println(redeHospitalar.getEstadosCobertura());
 
 				break;
 
@@ -224,7 +215,7 @@ public class Main {
 
 				paciente = new Paciente(nomePaciente, sobrenomePaciente, temperaturaPaciente,
 							sintomas, observacao);
-				
+
 				filaAtendimentoPaciente.add(paciente);
 				
 //				Teste do preenchimento da lista
@@ -278,6 +269,7 @@ public class Main {
 				if(!filaAtendimentoPaciente.isEmpty()) {
 					Paciente atendimento = null;
 					atendimento = filaAtendimentoPaciente.get(0);
+					System.out.println(atendimento.getId());
 					System.out.println(atendimento.getNome());
 					System.out.println(atendimento.getSobrenome());
 					System.out.println(atendimento.getSintomasPaciente());
@@ -291,9 +283,9 @@ public class Main {
 						hospital.adicionaInternacao(atendimento);
 					}
 					
-//					Paciente internado = null;
-//					internado = hospital.getLeitos().get(0);
-//					System.out.println(internado.getNome());
+					Paciente internado = null;
+					internado = hospital.getLeitos().get(0);
+					System.out.println(internado.getNome());
 					filaAtendimentoPaciente.remove(0);
 					
 				} else {

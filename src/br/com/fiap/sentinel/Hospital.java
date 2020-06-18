@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Hospital {
 
-	private static long id = 0;
+    private Long id = GenerateId.generateId();
     private String nome;
     private String endereco;
     private List<Paciente> leitos = new ArrayList<Paciente>(2);
@@ -21,7 +21,6 @@ public class Hospital {
     }
 
     public Hospital(String nome, String endereco, List<Paciente> leitos, List<Funcionario> funcionarios, List<Paciente> pacientes) {
-    	generateId();
         this.nome = nome;
         this.endereco = endereco;
         this.leitos = leitos;
@@ -29,13 +28,8 @@ public class Hospital {
         this.pacientes = pacientes;
     }
     
-    public static long generateId() {
-    	Hospital.id = Hospital.id + 1;
-    	return Hospital.id;
-    }
-    
     public long getId() {
-    	return Hospital.id;
+    	return id;
     }
 
     public String getNome() {

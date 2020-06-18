@@ -1,7 +1,9 @@
 package br.com.fiap.sentinel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RedeHospitalar {
 
@@ -74,5 +76,9 @@ public class RedeHospitalar {
 
     public void adicionaEstado(String estado) {
         estadosCobertura.add(estado);
+    }
+
+    public void adicionarHospital(Hospital hosp) {
+        hospitais.add(hosp);
     }
 }
