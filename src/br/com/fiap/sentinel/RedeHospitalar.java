@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class RedeHospitalar {
 
-	private static long id = 0; 
+	private static long id = GenerateId.generateId(); 
     private String nome;
     private String responsavel;
     private List<String> cidadesCobertura = new ArrayList<String>();
@@ -18,13 +18,11 @@ public class RedeHospitalar {
     public RedeHospitalar() {  }
     
     public RedeHospitalar(String nome, String responsavel) { 
-    	generateId();
     	this.nome = nome;
     	this.responsavel = responsavel;
     }
 
     public RedeHospitalar(String nome, String responsavel, List<String> cidadesCobertura, List<String> estadosCobertura, List<Hospital> hospitais) {
-    	generateId();
         this.nome = nome;
         this.responsavel = responsavel;
         this.cidadesCobertura = cidadesCobertura;
@@ -35,6 +33,10 @@ public class RedeHospitalar {
     public static long generateId() {
     	RedeHospitalar.id = RedeHospitalar.id + 1;
     	return RedeHospitalar.id;
+    }
+    
+    public long getId() {
+    	return id;
     }
 
     public String getNome() {
