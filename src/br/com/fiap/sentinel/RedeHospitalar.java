@@ -83,4 +83,9 @@ public class RedeHospitalar {
     public void adicionarHospital(Hospital hosp) {
         hospitais.add(hosp);
     }
+    
+    public void adicionarHospitais(List<Hospital>hospitalL) {
+    	hospitais = hospitalL;
+    }
+    
 }

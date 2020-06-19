@@ -131,10 +131,10 @@ public class Main {
 						hospitaisDaRede = hospitais.stream().filter(x -> x.getNome().equals(nomeDoHospital))
 								.collect(Collectors.toList());
 
-						Hospital hospRede = hospitaisDaRede.get(0);
+//						Hospital hospRede = hospitaisDaRede.get(0);
 
-						redeHospitalar.adicionarHospital(hospRede);
-						hospitais.remove(hospRede);
+						redeHospitalar.adicionarHospitais(hospitaisDaRede);
+//						hospitais.remove(hospRede);
 
 						dialogButton = JOptionPane.showConfirmDialog(null, "Deseja cadastrar outro Hospital na rede? ");
 
@@ -178,10 +178,7 @@ public class Main {
 				}
 				JOptionPane.showMessageDialog(null, "Obrigado! ");
 
-			} else {
-				JOptionPane.showMessageDialog(null, "Nenhuma rede hospitalar cadastrada em nossa base de dados. ");
-			}
-
+			} 
 			if (filaAtendimentoPaciente.size() > 0) {
 
 				char opcaoPacientePlano = JOptionPane
@@ -225,7 +222,11 @@ public class Main {
 
 				Double temperaturaPaciente = Double
 						.parseDouble(JOptionPane.showInputDialog("Informe a temperatura do paciente: "));
-
+				
+				if(temperaturaPaciente>=37) {
+					sintomasPaciente.add(true);
+				}
+				
 				dialogButton = JOptionPane.showConfirmDialog(null, "O paciente est√° com tosse seca ? (S) ou (N): ");
 
 				if (dialogButton == JOptionPane.YES_OPTION)
@@ -251,8 +252,15 @@ public class Main {
 				List<Boolean> sintomas = sintomasPaciente.stream().filter(x -> x == true).collect(Collectors.toList());
 
 				paciente = new Paciente(nomePaciente, sobrenomePaciente, temperaturaPaciente, sintomas, observacao);
-
-				filaAtendimentoPaciente.add(paciente);
+				
+				if(sintomas.size()>=2) {
+					filaAtendimentoPaciente.add(paciente);
+					JOptionPane.showMessageDialog(null, "O paciente " + paciente.getNome() + " precisar· ser internado. Iremos adicion·-lo na fila de atendimento.");
+				}else {
+					JOptionPane.showMessageDialog(null, "O paciente " + paciente.getNome() + " poder· realizar o tratamento em casa e n„o precisar· ser internado.");
+				}
+				sintomas = new ArrayList<Boolean>();
+				sintomasPaciente = new ArrayList<Boolean>();
 
 				break;
 
@@ -262,10 +270,19 @@ public class Main {
 				if (!filaAtendimentoPaciente.isEmpty()) {
 					Paciente atendimento = null;
 					atendimento = filaAtendimentoPaciente.get(0);
+					
+					String resultado = "";
+					
+					for(Boolean b : atendimento.getSintomasPaciente()) {
+						if(b==true) 
+							resultado = "Possui todos os sintomas " + "\n";
+						
+					}
+					
 					JOptionPane.showMessageDialog(null, atendimento.getId() + "\n" +
 
 							atendimento.getNome() + "\n" + atendimento.getSobrenome() + "\n" + "\n" + atendimento.getTemperatura()
-							+ atendimento.getSintomasPaciente() + "\n" + atendimento.getObservacoes());
+							+ resultado + "\n" + atendimento.getObservacoes());
 
 					dialogButton = JOptionPane.showConfirmDialog(null, "Dado o cen√°rio do paciente deseja intern√°-lo?");
 
