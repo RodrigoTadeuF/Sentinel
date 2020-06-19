@@ -2,6 +2,7 @@ package br.com.fiap.sentinel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Hospital {
 
@@ -92,6 +93,13 @@ public class Hospital {
     
     public Hospital getById(List<Hospital>hospitais,long id ) {
     	return hospitais.parallelStream().filter(x-> x.getId() == id).findFirst().orElse(null);
+    }
+
+    public void removeInternado(String nome) {
+        List<Paciente> remocao = leitos.stream().filter(p -> p.getNome().equals(nome)).collect(Collectors.toList());
+        Paciente removido = remocao.get(0);
+        leitos.remove(removido);
+        System.out.println("Paciente removido com sucesso!");
     }
 
 

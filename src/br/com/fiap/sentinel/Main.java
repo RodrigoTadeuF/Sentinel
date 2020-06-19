@@ -3,6 +3,7 @@ package br.com.fiap.sentinel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.swing.JOptionPane;
@@ -34,13 +35,13 @@ public class Main {
 			opcao = Integer
 					.parseInt(JOptionPane.showInputDialog("Selecione uma das opções abaixo para utilizar o sistema:"
 							+ "\n" + " - Digite 1 para cadastrar um funcionário" + "\n"
-							+ " - Digite 2 para cadastrar um hospital" + "\n" + " - Digite 3 para cadastrar uma rede"
+							+ " - Digite 2 para cadastrar um hospital" + "\n" +
+							" - Digite 3 para cadastrar uma rede"
 							+ "\n" + " - Digite 4 para cadastrar um plano de saúde" + "\n"
 							+ " - Digite 5 para cadastrar um paciente" + "\n"
-							+ " - Digite 6 para ver os hospitais que o plano atende" + "\n"
-							+ " - Digite 7 para atender um paciente" + "\n"
-							+ " - Digite 8 para ver a quantidade de leitos disponíveis" + "\n"
-							+ " - Digite 9 para liberar um paciente" + "\n" + " - Digite 0 para sair"));
+							+ " - Digite 6 para atender um paciente" + "\n"
+							+ " - Digite 7 para ver a quantidade de leitos disponíveis" + "\n"
+							+ " - Digite 8 para liberar um paciente" + "\n" + " - Digite 0 para sair"));
 
 			switch (opcao) {
 			case 1:
@@ -69,75 +70,6 @@ public class Main {
 				hospital = new Hospital(nomeHospital, endereco);
 
 				hospitais.add(hospital);
-
-				break;
-
-			case 4:
-
-				String nomePlanoSaude = JOptionPane.showInputDialog("Informe o nome do plano de saúde");
-
-				PlanoSaude plano = new PlanoSaude(nomePlanoSaude);
-
-				List<RedeHospitalar> redesFiltradas = null;
-
-				if (redesHospitalares.size() > 0) {
-
-					dialogButton = JOptionPane.showConfirmDialog(null, "Deseja vincular esse plano a alguma rede?");
-
-					if (dialogButton == JOptionPane.YES_OPTION) {
-
-						for (RedeHospitalar rede : redesHospitalares)
-							JOptionPane.showMessageDialog(null,
-									"Lista de redes hospitalares cadastradas em nossa base: " + rede.getId() + " - "
-											+ rede.getNome() + "\n");
-
-						String nomeRedePlano = JOptionPane
-								.showInputDialog("Digite o nome da rede que deseja vincular a esse plano");
-
-						redesFiltradas = redesHospitalares.stream().filter(x -> x.getNome().contains(nomeRedePlano))
-								.collect(Collectors.toList());
-
-						plano.setHospitaisPlano(redesFiltradas);
-
-						JOptionPane.showMessageDialog(null,
-								"Rede " + nomeRedePlano + " vinculada ao plano " + plano.getNome());
-					}
-					JOptionPane.showMessageDialog(null, "Obrigado! ");
-
-				} else {
-					JOptionPane.showMessageDialog(null, "Nenhuma rede hospitalar cadastrada em nossa base de dados. ");
-				}
-
-				if (filaAtendimentoPaciente.size() > 0) {
-
-					char opcaoPacientePlano = JOptionPane
-							.showInputDialog("Deseja vincular pacientes a esse plano de saude? (S) ou (N)")
-							.toUpperCase().charAt(0);
-
-					if (opcaoPacientePlano == 'S') {
-						for (Paciente p : filaAtendimentoPaciente)
-							JOptionPane.showMessageDialog(null,
-									"Pacientes vinculados a esse plano: " + p.getId() + " - " + p.getNome() + "\n");
-
-						long pacienteId = Long.parseLong(JOptionPane.showInputDialog(
-								"Informe o número correspondente ao paciente para vincular a esse plano"));
-
-						Paciente p = filaAtendimentoPaciente.stream().filter(x -> x.getId() == pacienteId).findFirst()
-								.orElse(null);
-
-						if (!(p == null)) {
-							JOptionPane.showMessageDialog(null,
-									"Paciente " + p.getNome() + " agora faz parte do plano " + plano.getNome());
-						} else {
-							JOptionPane.showMessageDialog(null, "Paciente não encontrado!");
-						}
-					}
-
-				} else {
-					JOptionPane.showMessageDialog(null, "Nenhum paciente cadastrado em nossa base de dados.");
-				}
-
-				planoSaudeL.add(plano);
 
 				break;
 
@@ -188,34 +120,100 @@ public class Main {
 					// estados = JOptionPane.showInputDialog("Digite o nome do estado: ");
 					redeHospitalar.adicionaCidade(estados);
 
-					for (Hospital hosp : hospitais)
-						JOptionPane.showMessageDialog(null,
-								"Hospitais cadastrados em nossa base: " + hosp.getId() + " - " + hosp.getNome() + "\n");
+					do {
+						for (Hospital hosp : hospitais)
+							JOptionPane.showMessageDialog(null,
+									"Hospitais cadastrados em nossa base: " + hosp.getId() + " - " + hosp.getNome() + "\n");
 
-					String nomeDoHospital = JOptionPane
-							.showInputDialog("Informe o nome do hospital que deseja vincular a essa rede: ");
+						String nomeDoHospital = JOptionPane
+								.showInputDialog("Informe o nome do hospital que deseja vincular a essa rede: ");
 
-					hospitaisDaRede = hospitais.stream().filter(x -> x.getNome().equals(nomeDoHospital))
-							.collect(Collectors.toList());
+						hospitaisDaRede = hospitais.stream().filter(x -> x.getNome().equals(nomeDoHospital))
+								.collect(Collectors.toList());
 
-					Hospital hospRede = hospitaisDaRede.get(0);
+						Hospital hospRede = hospitaisDaRede.get(0);
 
-					redeHospitalar.adicionarHospital(hospRede);
-					hospitais.remove(hospRede);
+						redeHospitalar.adicionarHospital(hospRede);
+						hospitais.remove(hospRede);
 
-					dialogButton = JOptionPane.showConfirmDialog(null, "Deseja cadastrar outro Hospital na rede? ");
+						dialogButton = JOptionPane.showConfirmDialog(null, "Deseja cadastrar outro Hospital na rede? ");
 
-					if (dialogButton == JOptionPane.YES_OPTION) {
 						redesHospitalares.add(redeHospitalar);
-						opt = -1;
-					} else {
 						opt = 0;
-						redesHospitalares.add(redeHospitalar);
-					}
 
+					} while (dialogButton == JOptionPane.YES_OPTION);
 				}
 
 				break;
+
+			case 4:
+
+			String nomePlanoSaude = JOptionPane.showInputDialog("Informe o nome do plano de saúde");
+
+			PlanoSaude plano = new PlanoSaude(nomePlanoSaude);
+
+			List<RedeHospitalar> redesFiltradas = null;
+
+			if (redesHospitalares.size() > 0) {
+
+				dialogButton = JOptionPane.showConfirmDialog(null, "Deseja vincular esse plano a alguma rede?");
+
+				if (dialogButton == JOptionPane.YES_OPTION) {
+
+					for (RedeHospitalar rede : redesHospitalares)
+						JOptionPane.showMessageDialog(null,
+								"Lista de redes hospitalares cadastradas em nossa base: " + rede.getId() + " - "
+										+ rede.getNome() + "\n");
+
+					String nomeRedePlano = JOptionPane
+							.showInputDialog("Digite o nome da rede que deseja vincular a esse plano");
+
+					redesFiltradas = redesHospitalares.stream().filter(x -> x.getNome().equals(nomeRedePlano))
+							.collect(Collectors.toList());
+
+					plano.setHospitaisPlano(redesFiltradas);
+
+					JOptionPane.showMessageDialog(null,
+							"Rede " + nomeRedePlano + " vinculada ao plano " + plano.getNome());
+				}
+				JOptionPane.showMessageDialog(null, "Obrigado! ");
+
+			} else {
+				JOptionPane.showMessageDialog(null, "Nenhuma rede hospitalar cadastrada em nossa base de dados. ");
+			}
+
+			if (filaAtendimentoPaciente.size() > 0) {
+
+				char opcaoPacientePlano = JOptionPane
+						.showInputDialog("Deseja vincular pacientes a esse plano de saude? (S) ou (N)")
+						.toUpperCase().charAt(0);
+
+				if (opcaoPacientePlano == 'S') {
+					for (Paciente p : filaAtendimentoPaciente)
+						JOptionPane.showMessageDialog(null,
+								"Pacientes vinculados a esse plano: " + p.getId() + " - " + p.getNome() + "\n");
+
+					long pacienteId = Long.parseLong(JOptionPane.showInputDialog(
+							"Informe o número correspondente ao paciente para vincular a esse plano"));
+
+					Paciente p = filaAtendimentoPaciente.stream().filter(x -> x.getId() == pacienteId).findFirst()
+							.orElse(null);
+
+					if (!(p == null)) {
+						JOptionPane.showMessageDialog(null,
+								"Paciente " + p.getNome() + " agora faz parte do plano " + plano.getNome());
+					} else {
+						JOptionPane.showMessageDialog(null, "Paciente não encontrado!");
+					}
+				}
+
+			} else {
+				JOptionPane.showMessageDialog(null, "Nenhum paciente cadastrado em nossa base de dados.");
+			}
+
+			planoSaudeL.add(plano);
+
+			break;
 
 			case 5:
 
@@ -256,68 +254,9 @@ public class Main {
 
 				filaAtendimentoPaciente.add(paciente);
 
-//				Teste do preenchimento da lista
-//				for (Paciente p : filaAtendimentoPaciente) {
-//					System.out.println(p.getId());
-//					System.out.println(p.getNome());
-//					System.out.println(p.getSobrenome());
-//					System.out.println(p.getSintomasPaciente());
-//					System.out.println(p.getObservacoes());
-//				}
-
-//				if (sintomas.size() >= 2) {
-//					
-//					paciente = new Paciente(nomePaciente, sobrenomePaciente, temperaturaPaciente,
-//							sintomas, observacao);
-//					
-//					System.out.println("Será necessário internar o paciente: " + paciente.getNome());
-//					
-//					pacientesParaInternar.add(paciente);
-
-				// Teste para ver se os dados estavam sendo preenchidos corretamente no objeto
-				// paciente
-//					for(Paciente i : pacientesParaInternar) {
-//						System.out.println(i.getId());
-//						System.out.println(i.getNome());
-//						System.out.println(i.getObservacoes());
-//						System.out.println(i.getSobrenome());
-//						System.out.println(i.getTemperatura());
-//					}
-
-//				} else {
-//					paciente = new Paciente(nomePaciente, sobrenomePaciente, temperaturaPaciente,
-//							sintomasPaciente, observacao);
-//					
-//					System.out.println("O tratamento do paciente: " + paciente.getNome() + " poderá ser feito em casa.");
-//				}
-
 				break;
 
 			case 6:
-				if (redesHospitalares.size() > 0) {
-
-					for (PlanoSaude p : planoSaudeL) {
-						JOptionPane.showMessageDialog(null, p.getId() + " - " + p.getNome());
-					}
-
-					long idPlano = Long.parseLong(JOptionPane
-							.showInputDialog("Informe o id do plano para consultar as redes que ele atende"));
-
-					List<RedeHospitalar> redeL = getByPlano(idPlano, redesHospitalares, planoSaudeL);
-
-					if (redeL.size() == 0) {
-						JOptionPane.showMessageDialog(null, "Nenhuma rede encontrada");
-					} else {
-						for (RedeHospitalar r : redeL) {
-							JOptionPane.showMessageDialog(null, r.getId() + " - " + r.getNome());
-						}
-					}
-
-				}
-
-				break;
-
-			case 7:
 				JOptionPane.showMessageDialog(null, "Bem vindo a central de atendimento");
 
 				if (!filaAtendimentoPaciente.isEmpty()) {
@@ -325,7 +264,7 @@ public class Main {
 					atendimento = filaAtendimentoPaciente.get(0);
 					JOptionPane.showMessageDialog(null, atendimento.getId() + "\n" +
 
-							atendimento.getNome() + "\n" + atendimento.getSobrenome() + "\n"
+							atendimento.getNome() + "\n" + atendimento.getSobrenome() + "\n" + "\n" + atendimento.getTemperatura()
 							+ atendimento.getSintomasPaciente() + "\n" + atendimento.getObservacoes());
 
 					dialogButton = JOptionPane.showConfirmDialog(null, "Dado o cenário do paciente deseja interná-lo?");
@@ -334,10 +273,7 @@ public class Main {
 						hospital.adicionaInternacao(atendimento);
 					}
 
-					Paciente internado = null;
-					internado = hospital.getLeitos().get(0);
-
-					JOptionPane.showMessageDialog(null, internado.getNome());
+					JOptionPane.showMessageDialog(null, filaAtendimentoPaciente.get(0).getNome());
 
 					filaAtendimentoPaciente.remove(0);
 
@@ -347,12 +283,14 @@ public class Main {
 
 				break;
 
-			case 8:
+			case 7:
 				JOptionPane.showMessageDialog(null,
 						String.format("O hospital possui %s leitos disponíveis", hospital.leitosDisponiveis()));
 				break;
 
-			case 9:
+			case 8:
+				String nomeDoPaciente = JOptionPane.showInputDialog(null, String.format("Digite o nome do paciente que deseja retirar do leito"));
+				hospital.removeInternado(nomeDoPaciente);
 				break;
 
 			case 0:
@@ -366,10 +304,4 @@ public class Main {
 
 		sc.close();
 	}
-
-	private static List<RedeHospitalar> getByPlano(long idPlano, List<RedeHospitalar> lista, List<PlanoSaude> planoL) {
-
-		return null;
-	}
-
 }
